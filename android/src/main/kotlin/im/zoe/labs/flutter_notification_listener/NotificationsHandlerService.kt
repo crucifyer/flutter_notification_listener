@@ -72,6 +72,12 @@ class NotificationsHandlerService: MethodChannel.MethodCallHandler, Notification
               val idx = args[1]!! as Int
               return result.success(tapNotificationAction(uid, idx))
           }
+          "service.remove" -> {
+              Log.d(TAG, "remove the notification")
+              val args = call.arguments<ArrayList<*>?>()
+              val uid = args!![0]!! as String
+              return result.success(removeNotification(uid))
+          }
           "service.send_input" -> {
               // send the input data
               Log.d(TAG, "set the content for input and the send action")
@@ -275,6 +281,22 @@ class NotificationsHandlerService: MethodChannel.MethodCallHandler, Notification
             return false
         }
         act.actionIntent.send()
+        return true
+    }
+
+    private fun removeNotification(uid: String): Boolean {
+        Log.d(TAG, "remove the notification: $uid")
+        if (!eventsCache.containsKey(uid)) {
+            Log.d(TAG, "notification is not exits: $uid")
+            return false
+        }
+        val n = eventsCache[uid] ?: return false
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            cancelNotification(n.mSbn.key)
+        } else {
+            cancelNotification(n.mSbn.packageName, n.mSbn.tag, n.mSbn.id)
+        }
+        eventsCache.remove(uid)
         return true
     }
 

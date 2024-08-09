@@ -138,6 +138,11 @@ class NotificationsListener {
         false;
   }
 
+  // remove the notification
+  static Future<bool> removeNotification(String uid) async {
+    return await _bgMethodChannel.invokeMethod('service.remove', [uid]) ?? false;
+  }
+
   /// set content for action's input
   /// this is useful while auto reply by notification
   static Future<bool> postActionInputs(

@@ -231,6 +231,11 @@ class NotificationEvent {
     return NotificationsListener.tapNotification(uniqueId!);
   }
 
+  // remove the notification
+  Future<bool> remove() {
+    return NotificationsListener.removeNotification(uniqueId!);
+  }
+
   /// get full notification
   Future<dynamic> getFull() {
     return NotificationsListener.getFullNotification(uniqueId!);
